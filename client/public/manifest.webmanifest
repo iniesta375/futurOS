@@ -1,0 +1,60 @@
+{
+  "name": "FuturOS — Developer Portfolio",
+  "short_name": "FuturOS",
+  "description": "An interactive OS-inspired developer portfolio. Explore projects, skills, and experience in a fully functional desktop environment.",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "landscape-primary",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "categories": ["portfolio", "productivity", "developer"],
+  "lang": "en-US",
+  "scope": "/",
+  "id": "/",
+
+  "icons": [
+    { "src": "/icons/icon-16.png",   "sizes": "16x16",   "type": "image/png" },
+    { "src": "/icons/icon-32.png",   "sizes": "32x32",   "type": "image/png" },
+    { "src": "/icons/icon-192.png",  "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png",  "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png",  "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "FuturOS Desktop"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "About Me",
+      "short_name": "About",
+      "description": "Learn about the developer",
+      "url": "/?app=about",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Projects",
+      "short_name": "Projects",
+      "description": "Explore portfolio projects",
+      "url": "/?app=projects",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "description": "Get in touch",
+      "url": "/?app=contact",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+
+  "related_applications": [],
+  "prefer_related_applications": false
+}

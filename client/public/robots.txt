@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Disallow internal state endpoints (none exist, but future-proofing)
+Disallow: /api/
+
+Sitemap: https://futuros.dev/sitemap.xml

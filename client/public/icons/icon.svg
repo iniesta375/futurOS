@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1e1b4b"/>
+      <stop offset="50%"  stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="glyph" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#e0e7ff"/>
+      <stop offset="100%" stop-color="#c7d2fe"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- Subtle accent border -->
+  <rect width="512" height="512" rx="112" fill="none"
+        stroke="url(#accent)" stroke-width="2" opacity="0.4"/>
+
+  <!-- Taskbar strip — bottom 18% -->
+  <rect x="0" y="418" width="512" height="94" rx="0" fill="rgba(99,102,241,0.12)"/>
+  <rect x="0" y="418" width="512" height="1"  fill="rgba(255,255,255,0.08)"/>
+
+  <!-- Window 1 — larger, left -->
+  <rect x="48"  y="68"  width="230" height="200" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+  <!-- Window 1 title bar -->
+  <rect x="48"  y="68"  width="230" height="36"  rx="18" fill="rgba(99,102,241,0.18)"/>
+  <rect x="48"  y="86"  width="230" height="18"  fill="rgba(99,102,241,0.18)"/>
+  <!-- Traffic lights -->
+  <circle cx="76"  cy="86" r="7" fill="#ff5f57" opacity="0.85"/>
+  <circle cx="100" cy="86" r="7" fill="#febc2e" opacity="0.85"/>
+  <circle cx="124" cy="86" r="7" fill="#28c840" opacity="0.85"/>
+
+  <!-- Window 2 — smaller, right, overlapping -->
+  <rect x="234" y="130" width="230" height="185" rx="18" fill="rgba(255,255,255,0.04)" stroke="rgba(139,92,246,0.25)" stroke-width="1.5"/>
+  <rect x="234" y="130" width="230" height="36"  rx="18" fill="rgba(139,92,246,0.15)"/>
+  <rect x="234" y="148" width="230" height="18"  fill="rgba(139,92,246,0.15)"/>
+  <circle cx="262" cy="148" r="7" fill="#ff5f57" opacity="0.75"/>
+  <circle cx="286" cy="148" r="7" fill="#febc2e" opacity="0.75"/>
+  <circle cx="310" cy="148" r="7" fill="#28c840" opacity="0.75"/>
+
+  <!-- Terminal lines in window 1 body -->
+  <rect x="68"  y="124" width="120" height="5" rx="2.5" fill="rgba(99,102,241,0.5)"/>
+  <rect x="68"  y="138" width="80"  height="5" rx="2.5" fill="rgba(255,255,255,0.2)"/>
+  <rect x="68"  y="152" width="140" height="5" rx="2.5" fill="rgba(255,255,255,0.12)"/>
+  <rect x="68"  y="166" width="60"  height="5" rx="2.5" fill="rgba(34,211,238,0.4)"/>
+  <rect x="80"  y="166" width="5"   height="10" rx="1" fill="rgba(255,255,255,0.6)"/>
+
+  <!-- Content lines in window 2 -->
+  <rect x="254" y="184" width="130" height="5" rx="2.5" fill="rgba(139,92,246,0.5)"/>
+  <rect x="254" y="198" width="90"  height="5" rx="2.5" fill="rgba(255,255,255,0.2)"/>
+  <rect x="254" y="212" width="110" height="5" rx="2.5" fill="rgba(255,255,255,0.12)"/>
+  <rect x="254" y="226" width="70"  height="5" rx="2.5" fill="rgba(34,211,238,0.3)"/>
+
+  <!-- Taskbar dots (app icons) -->
+  <circle cx="192" cy="459" r="18" fill="rgba(99,102,241,0.7)"/>
+  <circle cx="248" cy="459" r="18" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="304" cy="459" r="18" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="360" cy="459" r="18" fill="rgba(255,255,255,0.08)"/>
+
+  <!-- Sigil ✦ centered in taskbar -->
+  <text x="192" y="466" font-size="20" text-anchor="middle"
+        font-family="system-ui" fill="white" opacity="0.9">✦</text>
+
+  <!-- Glass reflection highlight -->
+  <ellipse cx="256" cy="80" rx="160" ry="30" fill="white" opacity="0.03"/>
+</svg>
