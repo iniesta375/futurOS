@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
-/* ============================================================
-   FUTUROS — Design Language & Theme Tokens
-   Tailwind CSS v4 uses @theme instead of tailwind.config.js
-   ============================================================ */
+
 
 @theme {
   /* ── Typography ── */
@@ -318,3 +315,24 @@ body.dragging   { cursor: grabbing !important; }
   user-select: text;
 }
 
+.panel {
+  background: rgba(14, 14, 26, 0.72);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+
+  border: 1px solid var(--color-os-border);
+
+  border-radius: 18px;
+
+  box-shadow: var(--shadow-floating);
+
+  transition:
+    transform .25s var(--ease-smooth),
+    border-color .25s var(--ease-smooth),
+    background .25s var(--ease-smooth);
+}
+
+.panel:hover{
+    border-color:var(--color-os-border-2);
+    transform:translateY(-2px);
+}

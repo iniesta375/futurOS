@@ -11,6 +11,7 @@ export const APP_IDS = {
   BROWSER:    'browser',
   SETTINGS:   'settings',
   CONTACT:    'contact',
+  ADMIN: 'admin',
 }
 
 export const APP_REGISTRY = {
@@ -104,6 +105,18 @@ export const APP_REGISTRY = {
     pinned: true,
     desktopIcon: true,
   },
+  [APP_IDS.ADMIN]: {
+  id: APP_IDS.ADMIN,
+  title: 'Admin',
+  icon: 'shield',
+  description: 'Portfolio Management',
+  defaultSize: { width: 1000, height: 650 },
+  minSize: { width: 700, height: 500 },
+  accentColor: '#10b981',
+  category: 'system',
+  pinned: false,
+  desktopIcon: false,
+},
 }
 
 /** Apps shown in the taskbar pinned area */

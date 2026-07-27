@@ -17,29 +17,6 @@ import APP_REGISTRY, { APP_IDS } from '@constants/appRegistry'
 import { AVAILABLE_WIDGETS } from '@constants/widgetRegistry'
 import WelcomeOverlay      from '@components/onboarding/WelcomeOverlay'
 
-/**
- * Desktop — Phase 12C Part 3 updated (Desktop Widget Framework).
- *
- * WallpaperLayer and BrightnessOverlay are now mounted inside
- * DesktopEffectsLayer, which also wraps children in GlassEffectProvider.
- *
- * Layer stack:
- *   DesktopEffectsLayer
- *   ├── WallpaperLayer         (zIndex 0)  — wallpaper + ambient + dim
- *   ├── [children]             (zIndex 1+) — all interactive content
- *   │   ├── DesktopIconGrid
- *   │   ├── WidgetManager       (zIndex 5)  — draggable desktop widgets
- *   │   ├── ContextMenu        (portal → #overlay-layer)
- *   │   ├── WindowManager      (portal → #window-layer)
- *   │   ├── Taskbar
- *   │   └── OS Overlays        (portal → #overlay-layer)
- *   └── BrightnessOverlay      (zIndex 9999) — above everything
- *
- * WidgetManager sits above desktop icons but below the taskbar — and,
- * because it lives inside this div's zIndex:1 stacking context, it can
- * never render above #window-layer or #overlay-layer regardless of any
- * internal widget zIndex (see stores/widgetStore.js for details).
- */
 export default function Desktop() {
   // Fine-grained selectors — Desktop only re-renders when these two actions
   // change, not on every osStore update (accent color, volume, wifi, etc.)
