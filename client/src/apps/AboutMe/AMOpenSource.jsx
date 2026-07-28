@@ -27,7 +27,6 @@ function RepoCard({ repo, delay }) {
         background: 'rgba(99,102,241,0.05)',
       }}
     >
-      {/* Contributor badge */}
       {repo.contrib && (
         <div style={{
           position: 'absolute', top: 10, right: 10,
@@ -41,7 +40,6 @@ function RepoCard({ repo, delay }) {
         </div>
       )}
 
-      {/* Repo name row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
         <GitBranch size={14} color="#6366f1" strokeWidth={1.75} />
         <span style={{
@@ -62,7 +60,6 @@ function RepoCard({ repo, delay }) {
         </a>
       </div>
 
-      {/* Description */}
       <p style={{
         fontFamily: 'var(--font-ui)', fontSize: 12, lineHeight: 1.6,
         color: 'rgba(255,255,255,0.55)', marginBottom: 14,
@@ -70,7 +67,6 @@ function RepoCard({ repo, delay }) {
         {repo.desc}
       </p>
 
-      {/* Footer stats */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
           <div style={{

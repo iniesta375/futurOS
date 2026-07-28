@@ -1,8 +1,6 @@
 export const IDENTITY = {
-  /** Your full name as it appears on your resume */
-  name:         'Your Name',
+  name:         'Ajayi Inioluwa Dorcas',
 
-  /** Your professional title — keep it concise */
   title:        'Full-Stack Developer & UI Engineer',
 
   /** 1–4 rotating taglines shown in the About Me hero */
@@ -25,23 +23,18 @@ what makes your work distinctive.
 A second paragraph can describe your current focus — what you're
 building, learning, or excited about right now.`,
 
-  /** City, State / City, Country */
-  location:     'Your City, Country',
+  location:     'Ogbomosho, Nigeria',
 
-  /** Professional email — this appears in the Contact app and terminal */
-  email:        'you@yourdomain.com',
+  email:        'ajayiinioluwa2007@gmail.com',
 
-  /**
-   * Set to true if you're actively looking for roles.
-   * Shows the pulsing "OPEN TO WORK" badge in About Me.
-   */
+  
   available:    true,
 
   /**
    * First initial of your name — shown in the avatar circle.
    * If you have a real avatar photo, see AVATAR_URL below.
    */
-  avatarInitial: 'Y',
+  avatarInitial: 'A',
 
   /**
    * Optional: URL to a square headshot (ideally 256×256px or larger).
@@ -64,35 +57,33 @@ building, learning, or excited about right now.`,
    */
   resumeUrl:    '/resume.pdf',
 
-  /** Stats shown in the About Me hero card. Edit or remove freely. */
   stats: [
-    { label: 'Years Exp.',   value: '5+' },
+    { label: 'Years Exp.',   value: '2+' },
     { label: 'Projects',     value: '20+' },
     { label: 'OSS Stars',    value: '—' },
     { label: 'Coffee / day', value: '3' },
   ],
 }
 
-// ── Social Links ──────────────────────────────────────────────────────────────
-// Replace the placeholder URLs. Remove any rows that don't apply to you.
+
 
 export const SOCIALS = [
   {
     label: 'GitHub',
     icon:  'github',
-    url:   'https://github.com/yourusername',
+    url:   'https://github.com/iniesta375',
     color: '#ffffff',
   },
   {
     label: 'LinkedIn',
     icon:  'linkedin',
-    url:   'https://linkedin.com/in/yourusername',
+    url:   'https://linkedin.com/in/ajayi-inioluwa',
     color: '#0a66c2',
   },
   {
     label: 'Twitter / X',
     icon:  'twitter',
-    url:   'https://twitter.com/yourusername',
+    url:   'https://x.com/Iniesta37506',
     color: '#1da1f2',
   },
   // Optional entries — uncomment to activate:
@@ -120,7 +111,6 @@ export const SKILLS = [
       { name: 'TypeScript',        level: 85 },
       { name: 'CSS / Tailwind',    level: 88 },
       { name: 'Framer Motion',     level: 75 },
-      // Add or remove skills freely
     ],
   },
   {
@@ -128,7 +118,6 @@ export const SKILLS = [
     color: '#34d399',
     items: [
       { name: 'Node.js / Express', level: 82 },
-      { name: 'PostgreSQL',        level: 78 },
       { name: 'MongoDB',           level: 72 },
       { name: 'Redis',             level: 65 },
     ],
@@ -152,10 +141,6 @@ export const SKILLS = [
   //   ],
   // },
 ]
-
-// ── Tech Stack ────────────────────────────────────────────────────────────────
-// The animated icon grid in the "Stack" section of About Me.
-// Keep only what you actually use.
 
 export const TECH_STACK = [
   { name: 'React',       color: '#61dafb', icon: '⚛' },
@@ -207,9 +192,9 @@ export const EXPERIENCE = [
   },
   // Add more roles as needed...
   {
-    role:    'Your Degree',
-    company: 'University Name',
-    period:  '2017 – 2021',
+    role:    'B.Sc. Computer Science',
+    company: 'Ladoke Akintola University of Technology',
+    period:  '2023 – 2027',
     type:    'Education',
     color:   '#fbbf24',
     bullets: [
@@ -229,7 +214,7 @@ export const OPEN_SOURCE = [
     name:   'your-project-name',
     desc:   'One sentence describing what this does and why it matters.',
     stars:  null,          // real star count, or null to hide
-    lang:   'TypeScript',
+    lang:   'JavaScript',
     color:  '#3178c6',
     url:    'https://github.com/yourusername/your-project',
   },
@@ -287,8 +272,7 @@ is custom-built with React, Framer Motion, and Zustand.`,
     ],
   },
 
-  // ── TEMPLATE: Web App ─────────────────────────────────────────────────────
-  // Duplicate and fill in for each real project. Delete if unused.
+  
   {
     id:       'project-two',
     title:    'Project Title',

@@ -4,15 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- ── Primary SEO ─────────────────────────────────────────────────── -->
     <title>FuturOS — Developer Portfolio</title>
-    <meta name="description" content="An interactive Windows 11-inspired OS portfolio. Explore projects, skills, and experience in a fully functional desktop environment built with React, TypeScript, and modern web technologies." />
+    <meta name="description" content="An interactive Windows 11-inspired OS portfolio. Explore projects, skills, and experience in a fully functional desktop environment built with React, JavaScript, and modern web technologies." />
     <meta name="keywords" content="developer portfolio, frontend engineer, React developer, full-stack, UI engineer, web development, JavaScript, TypeScript" />
     <meta name="author" content="Developer" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://futuros.dev/" />
 
-    <!-- ── Open Graph / Social ────────────────────────────────────────── -->
     <meta property="og:type"        content="website" />
     <meta property="og:url"         content="https://futuros.dev/" />
     <meta property="og:title"       content="FuturOS — Developer Portfolio" />
@@ -23,7 +21,6 @@
     <meta property="og:site_name"   content="FuturOS" />
     <meta property="og:locale"      content="en_US" />
 
-    <!-- ── Twitter / X Card ──────────────────────────────────────────── -->
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:site"        content="@yourtwitterhandle" />
     <meta name="twitter:creator"     content="@yourtwitterhandle" />
@@ -31,7 +28,6 @@
     <meta name="twitter:description" content="An interactive OS-inspired portfolio built with React. Explore projects, skills, and experience." />
     <meta name="twitter:image"       content="https://futuros.dev/og-image.png" />
 
-    <!-- ── PWA / Theme ───────────────────────────────────────────────── -->
     <meta name="theme-color"                  content="#0a0a0f" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -39,26 +35,24 @@
     <meta name="application-name"             content="FuturOS" />
     <meta name="msapplication-TileColor"      content="#0a0a0f" />
 
-    <!-- ── Icons & Manifest ──────────────────────────────────────────── -->
     <link rel="icon"             type="image/svg+xml"  href="/favicon.svg" />
     <link rel="icon"             type="image/png" sizes="32x32"  href="/icons/icon-32.png" />
     <link rel="icon"             type="image/png" sizes="16x16"  href="/icons/icon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
     <link rel="manifest"         href="/manifest.webmanifest" />
 
-    <!-- ── Structured Data (JSON-LD) ─────────────────────────────────── -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
-      "name": "Developer Name",
+      "name": "Ajayi Inioluwa Dorcas",
       "url": "https://futuros.dev",
       "sameAs": [
-        "https://github.com/yourusername",
-        "https://linkedin.com/in/yourusername"
+        "https://github.com/iniesta375",
+        "https://linkedin.com/in/ajayi-inioluwa"
       ],
       "jobTitle": "Full-Stack Developer",
-      "description": "Full-stack developer specializing in React, TypeScript, and modern web technologies.",
+      "description": "Full-stack developer specializing in React, JavaScript, and modern web technologies.",
       "knowsAbout": ["React", "TypeScript", "Node.js", "UI Engineering", "Web Performance"],
       "potentialAction": {
         "@type": "ViewAction",
@@ -67,7 +61,6 @@
     }
     </script>
 
-    <!-- ── Fonts: Syne (display) · DM Sans (UI) · JetBrains Mono (terminal) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -77,9 +70,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Window portal layer — windows render here via React.createPortal -->
     <div id="window-layer"></div>
-    <!-- Overlay layer — modals, context menus, tooltips -->
     <div id="overlay-layer"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

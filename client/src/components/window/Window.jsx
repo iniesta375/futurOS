@@ -11,30 +11,8 @@ import { WindowErrorBoundary } from '@components/error/ErrorBoundary'
 
 const TASKBAR_H = 52
 
-/**
- * Window — Phase 12.5 (Release Candidate Stabilization)
- *
- * C1 — Animation respects animationsEnabled
- *   windowVariants now sourced from useOSAnimations().windowVariants.
- *   All transitions (open/close spring, CSS border/shadow transition) are
- *   gated on enabled. When animations are off, windows appear/disappear
- *   instantly with no scale/translate motion.
- *
- * M1 — Body background from glass context
- *   background now comes from glass.background (computed by GlassEffectContext)
- *   instead of a hardcoded rgba literal. Both backdropFilter and background
- *   now track the transparency toggle and glassBlur slider together.
- *
- * H3 — SnapPreviewOverlay removed from here
- *   Moved to WindowManager as a true singleton. This component no longer
- *   renders or reads activeDragWindowId.
- *
- * H2 — snap timers
- *   Handled inside useSnapEngine (see hooks/useSnapEngine.js).
- */
+
 export default function Window({ win }) {
-  // Fine-grained selectors — Window only re-renders when win prop changes
-  // (passed from WindowManager). These action refs are stable across renders.
   const focusWindow      = useWindowStore(s => s.focusWindow)
   const closeWindow      = useWindowStore(s => s.closeWindow)
   const minimizeWindow   = useWindowStore(s => s.minimizeWindow)
@@ -47,7 +25,6 @@ export default function Window({ win }) {
   const glass       = useGlassEffect('window')
   const accentColor = app?.accentColor || '#6366f1'
 
-  // C1: all animation decisions come from the shared context
   const { enabled, windowVariants, panelEase } = useOSAnimations()
 
   const maxW = window.innerWidth
@@ -56,9 +33,21 @@ export default function Window({ win }) {
   const rndPosition = win.isMaximized ? { x: 0, y: 0 } : { x: win.position.x, y: win.position.y }
   const rndSize     = win.isMaximized ? { width: maxW, height: maxH } : { width: win.size.width, height: win.size.height }
 
-  // ── Handlers ────────────────────────────────────────────────────────────
+  console.log({
+  id: win.id,
+  isMaximized: win.isMaximized,
+  rndPosition,
+  rndSize,
+  maxW,
+  maxH,
+})
+
   const handleFocus    = useCallback(() => { if (!win.isFocused) focusWindow(win.id) }, [win.id, win.isFocused, focusWindow])
-  const handleClose    = useCallback(() => closeWindow(win.id),    [win.id, closeWindow])
+  const handleClose = useCallback(() => {
+  console.log("handleClose fired:", win.id)
+
+  closeWindow(win.id)
+}, [win.id, closeWindow])
   const handleMinimize = useCallback(() => minimizeWindow(win.id), [win.id, minimizeWindow])
   const handleMaximize = useCallback(() => toggleMaximize(win.id), [win.id, toggleMaximize])
 
@@ -80,6 +69,8 @@ export default function Window({ win }) {
 
   if (win.isMinimized) return null
 
+
+
   return (
     <motion.div
       key={win.id}
@@ -96,6 +87,7 @@ export default function Window({ win }) {
       }}
     >
       <Rnd
+        key={`${win.id}-${win.isMaximized}`}
         position={rndPosition}
         size={rndSize}
         minWidth={win.minSize.width}
@@ -104,6 +96,7 @@ export default function Window({ win }) {
         maxHeight={win.isMaximized ? maxH : undefined}
         bounds="parent"
         dragHandleClassName="window-drag-handle"
+        cancel=".no-drag"
         disableDragging={win.isMaximized}
         enableResizing={!win.isMaximized}
         onDragStart={handleDragStart}
@@ -152,7 +145,6 @@ export default function Window({ win }) {
               : 'none',
           }}
         >
-          {/* Focused accent line */}
           {win.isFocused && !win.isMaximized && (
             <div style={{
               position: 'absolute',
@@ -175,14 +167,12 @@ export default function Window({ win }) {
             style={{ borderRadius: win.isMaximized ? 0 : '0 0 12px 12px' }}
             onMouseDown={handleFocus}
           >
-            {/* Unfocused dim veil */}
             {!win.isFocused && (
               <div style={{
                 position: 'absolute', inset: 0,
                 background: 'rgba(0,0,0,0.12)',
                 pointerEvents: 'none', zIndex: 20,
                 borderRadius: win.isMaximized ? 0 : '0 0 12px 12px',
-                // C1: CSS transition gated
                 transition: enabled ? 'background 0.2s' : 'none',
               }} />
             )}

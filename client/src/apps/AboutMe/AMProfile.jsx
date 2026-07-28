@@ -49,7 +49,6 @@ export default function AMProfile() {
   return (
     <section id="profile" ref={ref} style={{ padding: '32px 28px 24px' }}>
 
-      {/* Hero card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -64,7 +63,6 @@ export default function AMProfile() {
           overflow: 'hidden',
         }}
       >
-        {/* Background glow */}
         <div style={{
           position: 'absolute', top: -40, right: -40,
           width: 200, height: 200,

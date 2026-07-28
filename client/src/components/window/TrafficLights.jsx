@@ -4,15 +4,7 @@ import { X, Minus, Maximize2, Minimize2 } from 'lucide-react'
 import SnapLayoutPicker from '@components/snap/SnapLayoutPicker'
 import { useOSAnimations } from '@contexts/GlassEffectContext'
 
-/**
- * TrafficLights — Window control buttons (close, minimize, maximize).
- *
- * Hovering the green maximize button reveals the SnapLayoutPicker.
- *
- * Phase 13B:
- *  - whileHover/whileTap gated on useOSAnimations().enabled
- *  - aria-label on each button for screen reader access
- */
+
 export default function TrafficLights({
   onClose, onMinimize, onMaximize,
   isMaximized, windowId, accentColor = '#6366f1',
@@ -32,54 +24,65 @@ export default function TrafficLights({
   ]
 
   return (
-    <div
-      className="flex items-center gap-2"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => { setHovered(false); setShowSnap(false) }}
-      style={{ position: 'relative' }}
+    <div className = "no-drag"
+      style={{
+        display: "flex",
+        gap: 8,
+      }}
     >
-      {buttons.map(({ key, color, icon: Icon, action, shadow, label }) => (
-        <motion.button
-          key={key}
-          whileHover={enabled ? { scale: 1.15 } : {}}
-          whileTap={enabled ? { scale: 0.88 } : {}}
-          transition={{ type: 'spring', stiffness: 600, damping: 30 }}
-          aria-label={label}
-          onClick={e => {
-            e.stopPropagation()
-            if (key === 'maximize' && showSnap && windowId) return
-            action?.()
-          }}
-          onMouseEnter={() => {
-            if (key === 'maximize' && !isMaximized && windowId) setShowSnap(true)
-          }}
-          style={{
-            width: 13, height: 13, borderRadius: '50%',
-            background: color, border: 'none', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: hovered ? `0 0 8px ${shadow}` : 'none',
-            transition: 'box-shadow 0.15s', flexShrink: 0, position: 'relative',
-          }}
-        >
-          <motion.div
-            animate={{ opacity: hovered ? 1 : 0 }}
-            transition={{ duration: enabled ? 0.1 : 0 }}
-            aria-hidden="true"
-          >
-            <Icon size={7} strokeWidth={2.5} color="rgba(0,0,0,0.6)" />
-          </motion.div>
-        </motion.button>
-      ))}
+      <motion.button
+        whileHover={{ scale: 1.15 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("close");
+          onClose?.();
+        }}
+        style={{
+          width: 13,
+          height: 13,
+          borderRadius: "50%",
+          background: "#ff5f57",
+          border: "none",
+          cursor: "pointer",
+        }}
+      />
 
-      <AnimatePresence>
-        {showSnap && windowId && !isMaximized && (
-          <SnapLayoutPicker
-            windowId={windowId}
-            accentColor={accentColor}
-            onClose={() => setShowSnap(false)}
-          />
-        )}
-      </AnimatePresence>
+      <motion.button
+        whileHover={{ scale: 1.15 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("minimize");
+          onMinimize?.();
+        }}
+        style={{
+          width: 13,
+          height: 13,
+          borderRadius: "50%",
+          background: "#febc2e",
+          border: "none",
+          cursor: "pointer",
+        }}
+      />
+
+      <motion.button
+        whileHover={{ scale: 1.15 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("maximize");
+          onMaximize?.();
+        }}
+        style={{
+          width: 13,
+          height: 13,
+          borderRadius: "50%",
+          background: "#28c840",
+          border: "none",
+          cursor: "pointer",
+        }}
+      />
     </div>
-  )
+  );
 }

@@ -1,20 +1,3 @@
-/**
- * NotificationToasts.jsx — FuturOS Toast Stack
- *
- * Features:
- * - Slides in from right, spring physics
- * - Animated progress bar depletes over duration
- * - Hover pauses auto-dismiss
- * - Max 5 visible, oldest dismissed first
- * - Type-specific accent color + icon
- * - Optional action button on toast
- * - Portal rendered into #overlay-layer
- *
- * Phase 12C Part 3: fixed missing useGlassEffect import (was referenced
- * but never imported in Part 2 — caused a runtime crash on mount since
- * this component renders unconditionally inside Desktop). Also reduced
- * three redundant useGlassEffect('toast') calls down to one.
- */
 
 import { memo } from 'react'
 import { createPortal } from 'react-dom'
@@ -22,9 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import DynamicIcon from '@components/ui/DynamicIcon'
 import useNotificationStore, { TYPE_CONFIG } from '@stores/notificationStore'
-import { useGlassEffect } from '@contexts/GlassEffectContext'
+import { useGlassEffect, useOSAnimations } from '@contexts/GlassEffectContext'
 
-// ── Single Toast ──────────────────────────────────────────────────────────
+
 
 const Toast = memo(function Toast({ toast }) {
   const dismissToast = useNotificationStore(s => s.dismissToast)

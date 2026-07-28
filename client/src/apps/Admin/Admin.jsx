@@ -4,7 +4,7 @@ import AdminLogin from "./AdminLogin";
 import Sidebar from "./layout/Sidebar";
 
 import Dashboard from "./dashboard/Dashboard";
-import Projects from "./projects/Projects";
+import Projects from "./pages/Project";
 
 import { isLoggedIn } from "../../services/authService";
 

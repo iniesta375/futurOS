@@ -18,8 +18,7 @@ import { AVAILABLE_WIDGETS } from '@constants/widgetRegistry'
 import WelcomeOverlay      from '@components/onboarding/WelcomeOverlay'
 
 export default function Desktop() {
-  // Fine-grained selectors — Desktop only re-renders when these two actions
-  // change, not on every osStore update (accent color, volume, wifi, etc.)
+  
   const showContextMenu = useOSStore(s => s.showContextMenu)
   const hideContextMenu = useOSStore(s => s.hideContextMenu)
   const openWindow  = useWindowStore(s => s.openWindow)
@@ -68,10 +67,7 @@ export default function Desktop() {
           action: minimizeAll,
         },
         { divider: true },
-        // ── Widgets (Feature 7/8 — desktop integration) ──────────────────
-        // One "Add <Title> Widget" item per AVAILABLE_WIDGETS entry.
-        // Future widgets need zero changes here — they appear automatically
-        // once their registry entry sets `available: true`.
+        
         ...AVAILABLE_WIDGETS.map(w => ({
           label: `Add ${w.title} Widget`,
           icon: w.icon,
@@ -108,31 +104,23 @@ export default function Desktop() {
         style={{ zIndex: 1 }}
         onClick={hideContextMenu}
       >
-        {/* Desktop icons */}
         <DesktopIconGrid onContextMenu={handleDesktopRightClick} />
 
-        {/* Desktop widgets — Feature 3/7 */}
         <WidgetManager />
 
-        {/* Context menu (portal → #overlay-layer) */}
         <ContextMenu />
 
-        {/* Windows (portal → #window-layer) */}
         <WindowManager />
 
-        {/* Taskbar */}
         <Taskbar />
 
-        {/* OS overlays (all portal-rendered → #overlay-layer) */}
         <GlobalSearch />
         <KeyboardOverlay />
         <NotificationToasts />
         <NotificationCenter />
 
-        {/* Snap assist companion panel */}
         <SnapAssistPanel />
 
-        {/* First-visit onboarding overlay — Phase 14 */}
         <WelcomeOverlay />
       </div>
     </DesktopEffectsLayer>

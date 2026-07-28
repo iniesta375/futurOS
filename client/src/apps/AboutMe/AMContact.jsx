@@ -72,6 +72,8 @@ export default function AMContact() {
   const [copied, setCopied] = useState(false)
   const [ref, inView] = useInView({ threshold: 0.1 })
 
+  const { enabled } = useOSAnimations();
+
   const handleCopy = () => {
     navigator.clipboard.writeText(PROFILE.email).then(() => {
       setCopied(true)
@@ -91,7 +93,6 @@ export default function AMContact() {
         <div style={{ width: 32, height: 2, borderRadius: 99, background: '#f87171' }} />
       </div>
 
-      {/* CTA hero card */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -104,7 +105,6 @@ export default function AMContact() {
           position: 'relative', overflow: 'hidden',
         }}
       >
-        {/* Glow */}
         <div style={{
           position: 'absolute', bottom: -30, right: -30,
           width: 160, height: 160,
@@ -126,7 +126,6 @@ export default function AMContact() {
           If you have an interesting problem to solve, I'd love to hear from you.
         </p>
 
-        {/* Email CTA */}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <a
             href={`mailto:${PROFILE.email}`}
@@ -168,7 +167,6 @@ export default function AMContact() {
         </div>
       </motion.div>
 
-      {/* Social links grid */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
         {SOCIALS.map((social, i) => (
           <SocialBtn key={social.label} social={social} delay={0.05 + i * 0.06} />

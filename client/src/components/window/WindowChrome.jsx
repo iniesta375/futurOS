@@ -5,25 +5,7 @@ import SnapZoneIndicator from '@components/snap/SnapZoneIndicator'
 import APP_REGISTRY from '@constants/appRegistry'
 import { useGlassEffect, useOSAnimations } from '@contexts/GlassEffectContext'
 
-/**
- * WindowChrome — Phase 12C updated.
- *
- * Changes:
- *  - Added SnapZoneIndicator in the title area (shows when win.snapZone is set)
- *  - Indicator displays zone name and an X to un-snap
- *  - Title text shifts left slightly when indicator is visible (flex layout)
- *
- * Phase 12C Part 4:
- *  - blur/backdropFilter now come from useGlassEffect('chrome'), so the
- *    title bar tracks the transparency toggle and glassBlur slider.
- *  - The focus-aware tinted background (rgba(18,18,36,..) vs
- *    rgba(12,12,22,..)) is preserved only while transparency is ON —
- *    once it's off, the bar falls back to glass.background (the same
- *    flat solid every other "chrome" surface uses), matching the
- *    "all surfaces go solid" rule from GlassEffectContext.
- *  - The background/border CSS transition is skipped when
- *    animationsEnabled is false.
- */
+
 const WindowChrome = memo(function WindowChrome({
   win,
   onClose,
@@ -56,17 +38,16 @@ const WindowChrome = memo(function WindowChrome({
       }}
       onDoubleClick={onMaximize}
     >
-      {/* Top edge accent line */}
       {isFocused && (
         <div style={{
           position: 'absolute',
           top: 0, left: '10%', right: '10%', height: 1,
           background: `linear-gradient(90deg, transparent, ${accentColor}66, transparent)`,
-          pointerEvents: 'none',
+          pointerEvents: 'auto',
+          zIndex: 1000
         }} />
       )}
 
-      {/* Traffic light controls + snap picker */}
       <TrafficLights
         windowId={win.id}
         accentColor={accentColor}
@@ -76,7 +57,6 @@ const WindowChrome = memo(function WindowChrome({
         isMaximized={win.isMaximized}
       />
 
-      {/* App icon + title (flex-1 so snap indicator pushes from right) */}
       <div className="flex items-center gap-2 flex-1 min-w-0">
         {app && (
           <div
@@ -109,18 +89,14 @@ const WindowChrome = memo(function WindowChrome({
         </span>
       </div>
 
-      {/*
-        Phase 12C: SnapZoneIndicator — shows current snap zone label + un-snap X button.
-        Only visible when win.snapZone is set. AnimatePresence inside handles enter/exit.
-        Positioned to the right of the title, before the right spacer.
-      */}
+  
       <SnapZoneIndicator
         windowId={win.id}
         snapZone={win.snapZone}
         accentColor={accentColor}
       />
 
-      {/* Right spacer for optical title centering */}
+
       <div style={{ width: 55, flexShrink: 0 }} />
     </div>
   )

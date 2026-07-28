@@ -17,7 +17,6 @@ export default function AboutMe() {
   const [activeSection, setActiveSection] = useState('profile')
   const scrollRef = useRef(null)
 
-  // Scroll-spy
   useEffect(() => {
     const container = scrollRef.current
     if (!container) return

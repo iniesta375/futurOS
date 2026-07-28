@@ -27,12 +27,10 @@ function TimelineNode({ entry, index, isLast }) {
       transition={{ delay: index * 0.1, duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
       style={{ display: 'flex', gap: 20, position: 'relative' }}
     >
-      {/* Timeline spine */}
       <div style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         flexShrink: 0, width: 40,
       }}>
-        {/* Node dot */}
         <motion.div
           initial={{ scale: 0 }}
           animate={inView ? { scale: 1 } : {}}
@@ -49,7 +47,6 @@ function TimelineNode({ entry, index, isLast }) {
           <Icon size={15} color={entry.color} strokeWidth={1.75} />
         </motion.div>
 
-        {/* Connector line */}
         {!isLast && (
           <motion.div
             initial={{ height: 0 }}
@@ -64,9 +61,7 @@ function TimelineNode({ entry, index, isLast }) {
         )}
       </div>
 
-      {/* Content */}
       <div style={{ flex: 1, paddingBottom: isLast ? 0 : 28, minWidth: 0 }}>
-        {/* Header row */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: 10 }}>
           <div>
             <div style={{
@@ -102,7 +97,6 @@ function TimelineNode({ entry, index, isLast }) {
           </div>
         </div>
 
-        {/* Bullets */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {entry.bullets.map((bullet, bi) => (
             <motion.div

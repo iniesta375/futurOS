@@ -23,39 +23,43 @@ export default function Projects() {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // Fetch Projects
+
   useEffect(() => {
     const loadProjects = async () => {
       try {
         const data = await getProjects();
 
-        const formatted = data.map((project) => ({
-          id: project._id,
+        console.log("Projects API response:", data);
 
-          title: project.title,
+       const formatted = data.map((project) => ({
+  id: project._id,
 
-          subtitle: project.subtitle ?? "",
+  title: project.title,
+  subtitle: project.subtitle,
+  description: project.description,
 
-          description: project.description,
+  image: project.image,
 
-          image: project.image ?? "",
+  accent: project.accent,
+  gradient: project.gradient,
 
-          github: project.github ?? "",
+  role: project.role,
+  year: project.year,
 
-          liveDemo: project.liveDemo ?? "",
+  tech: project.technologies,
 
-          tech: project.technologies ?? [],
+  highlights: project.highlights,
 
-          category: project.category ?? "portfolio",
+  category: project.category,
 
-          featured: project.featured ?? false,
+  featured: project.featured,
 
-          stars: project.stars ?? 0,
+  status: project.status,
 
-          status: project.status ?? "Completed",
+  links: project.links,
 
-          createdAt: project.createdAt,
-        }));
+  stats: project.stats,
+}));
 
         setProjects(formatted);
       } catch (err) {
@@ -69,7 +73,6 @@ export default function Projects() {
     loadProjects();
   }, []);
 
-  // Dynamic categories
   const categories = useMemo(() => {
     const cats = [...new Set(projects.map((p) => p.category).filter(Boolean))];
 
@@ -85,7 +88,6 @@ export default function Projects() {
     return [...new Set(projects.flatMap((p) => p.tech))].sort();
   }, [projects]);
 
-  // Filter projects
   const filteredProjects = useMemo(() => {
     return projects.filter((p) => {
       if (featuredOnly && !p.featured) return false;
@@ -114,7 +116,6 @@ export default function Projects() {
     });
   }, [projects, searchQuery, selectedCat, selectedTags, featuredOnly]);
 
-  // Category counts
   const projectCounts = useMemo(() => {
     const counts = {};
 

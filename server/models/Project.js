@@ -5,6 +5,7 @@ const projectSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
     },
 
     subtitle: {
@@ -19,7 +20,7 @@ const projectSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      default: "portfolio",
+      default: "",
     },
 
     image: {
@@ -27,14 +28,25 @@ const projectSchema = new mongoose.Schema(
       default: "",
     },
 
-    github: {
+    accent: {
       type: String,
-      default: "",
+      default: "#6366f1",
     },
 
-    liveDemo: {
+    gradient: {
       type: String,
-      default: "",
+      default:
+        "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+    },
+
+    role: {
+      type: String,
+      default: "Full Stack Developer",
+    },
+
+    year: {
+      type: String,
+      default: new Date().getFullYear().toString(),
     },
 
     technologies: [
@@ -43,9 +55,39 @@ const projectSchema = new mongoose.Schema(
       },
     ],
 
-    stars: {
-      type: Number,
-      default: 0,
+    highlights: [
+      {
+        type: String,
+      },
+    ],
+
+    links: {
+      github: {
+        type: String,
+        default: "",
+      },
+
+      live: {
+        type: String,
+        default: "",
+      },
+    },
+
+    stats: {
+      stars: {
+        type: Number,
+        default: 0,
+      },
+
+      commits: {
+        type: Number,
+        default: 0,
+      },
+
+      forks: {
+        type: Number,
+        default: 0,
+      },
     },
 
     status: {

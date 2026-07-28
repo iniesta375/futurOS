@@ -12,7 +12,7 @@ import { initAnalytics } from "@utils/analytics";
 initAnalytics();
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter>
     <ToastContainer
         position="top-right"
@@ -21,7 +21,7 @@ createRoot(document.getElementById("root")).render(
     />
       <App />
     </BrowserRouter>
-  </StrictMode>
+  // </StrictMode>
 );
 
 if (import.meta.env.PROD && "serviceWorker" in navigator) {

@@ -5,31 +5,6 @@ import useSnapStore from '@stores/snapStore'
 import { SNAP_ZONE, SNAP_ZONE_META, getSnapGeometry, TASKBAR_H } from '@constants/snapConstants'
 import { useGlassEffect, useOSAnimations } from '@contexts/GlassEffectContext'
 
-/**
- * SnapPreviewOverlay — Phase 12C snap ghost overlay.
- *
- * Renders into #window-layer (sits above windows but below overlay-layer).
- * Shows a semi-transparent zone fill + zone label when cursor is near a snap zone.
- *
- * Reads ONLY from snapStore (not windowStore) so drag position changes
- * don't cause windowStore subscribers to re-render.
- *
- * Architecture note: This component is always mounted but renders nothing
- * when previewVisible is false. This avoids portal mount/unmount overhead
- * on every drag start.
- *
- * Phase 12C Part 4: the zone label pill's background/blur now come from
- * useGlassEffect('chrome'), and all motion (zone ghost, dim layer, label
- * pill) respects animationsEnabled via useOSAnimations().enabled. This
- * stays cheap during drag — useGlassEffect reads the already-memoized
- * GlassEffectContext value, and useOSAnimations only re-renders when the
- * animationsEnabled setting itself changes, not on drag frames.
- *
- * The full-screen ScreenDimLayer (a flat rgba(0,0,0,0.2) scrim, no blur)
- * is intentionally NOT migrated to useGlassBackdrop — it's a much
- * lighter "dim while dragging" effect, not a modal scrim, and isn't
- * considered part of the glass surface system.
- */
 function ZoneGhost({ zone, accentColor }) {
   const geo  = getSnapGeometry(zone)
   const meta = SNAP_ZONE_META[zone]
@@ -41,7 +16,6 @@ function ZoneGhost({ zone, accentColor }) {
   const vw = window.innerWidth
   const vh = window.innerHeight - TASKBAR_H
 
-  // Convert pixel geometry to percentage for CSS (stays correct on resize)
   const style = {
     left:   `${(geo.x / vw)     * 100}%`,
     top:    `${(geo.y / vh)     * 100}%`,

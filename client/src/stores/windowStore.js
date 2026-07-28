@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 
-// Analytics — dynamic import to keep store lean and avoid circular deps
 function trackAppLaunch(appId) {
   import('@utils/analytics').then(m => m.Analytics.appLaunch(appId)).catch(() => {})
 }
@@ -9,41 +8,13 @@ function trackAppClose(appId) {
   import('@utils/analytics').then(m => m.Analytics.appClose(appId)).catch(() => {})
 }
 
-/**
- * useWindowStore — Central OS window management state
- *
- * Window schema:
- * {
- *   id:                  string   — unique window ID (appId-timestamp)
- *   appId:               string   — matches APP_REGISTRY key
- *   title:               string   — displayed in title bar
- *   isMinimized:         boolean
- *   isMaximized:         boolean
- *   isFocused:           boolean
- *   zIndex:              number   — managed by module-level counter
- *   position:            { x, y }
- *   size:                { width, height }
- *   minSize:             { width, height }
- *   props:               object   — passed into the app component
- *   preMaximizePosition: { x, y } | null   — saved before maximize/snap
- *   preMaximizeSize:     { width, height } | null
- *   snapZone:            string | null  — active snap zone ID or null
- * }
- */
-
-// ── Z-index counter ─────────────────────────────────────────────────────────
-// Module-level for performance — avoids a store read on every focus event.
-// Starts at 200 to sit above desktop icons (z:5) and widgets (z:10–50) while
-// staying safely below #overlay-layer (z:500) and #window-layer (z:100).
-// Reset on logout via resetZCounter() to prevent unbounded growth.
 let zCounter = 200
 
 export function resetZCounter() {
   zCounter = 200
 }
 
-// ── Last-focused tracker ────────────────────────────────────────────────────
-// O(n) linear scan — avoids sorting the entire array on every close/minimize.
+
 function findNextFocus(windows) {
   let best = null
   for (const w of windows) {
@@ -118,17 +89,24 @@ const useWindowStore = create(
 
     // ── Close ────────────────────────────────────────────────────────────────
     closeWindow: (id) => {
-      const win = get().windows.find(w => w.id === id)
-      if (win) trackAppClose(win.appId)
-      set(state => {
-        const remaining    = state.windows.filter(w => w.id !== id)
-        const lastFocused  = findNextFocus(remaining)
-        return {
-          windows:        remaining,
-          activeWindowId: lastFocused?.id ?? null,
-        }
-      })
-    },
+  const win = get().windows.find(w => w.id === id);
+
+  if (win) trackAppClose(win.appId);
+
+  set((state) => {
+    const remaining = state.windows.filter((w) => w.id !== id);
+
+    const nextFocused = findNextFocus(remaining);
+
+    return {
+      windows: remaining.map((w) => ({
+        ...w,
+        isFocused: nextFocused ? w.id === nextFocused.id : false,
+      })),
+      activeWindowId: nextFocused?.id ?? null,
+    };
+  });
+},
 
     // ── Focus ────────────────────────────────────────────────────────────────
     focusWindow: (id) => {
@@ -281,5 +259,7 @@ const useWindowStore = create(
     getOpenWindows:  ()      => get().windows.filter(w => !w.isMinimized),
   }))
 )
+
+window.useWindowStore = useWindowStore;
 
 export default useWindowStore
