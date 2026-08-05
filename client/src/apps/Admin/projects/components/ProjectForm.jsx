@@ -1,23 +1,25 @@
 import { useState } from "react";
-
+import { motion } from "framer-motion";
+import { LoaderCircle, FolderOpen, Image, Link2, Settings } from "lucide-react";
 import { toast } from "react-toastify";
-import { createProject, updateProject } from "../../../../services/projectService";
 
-export default function ProjectForm({
+import {
+  createProject,
+  updateProject,
+} from "../../../../services/projectService";
 
-    project = null,
+import { Input, Select, Checkbox, Button, FileUpload } from "../../ui";
 
-    refresh,
+import RichTextEditor from "../../ui/RichTextEditor/RichTextEditor";
 
-    close,
+export default function ProjectForm({ project = null, refresh, close }) {
+  const [loading, setLoading] = useState(false);
 
+  const [preview, setPreview] = useState(project?.image || "");
 
-}){
+  const [removeCurrentImage, setRemoveCurrentImage] = useState(false);
 
-    const [loading, setLoading] = useState(false);
-
-const [formData, setFormData] = useState({
-
+  const [formData, setFormData] = useState({
     title: project?.title || "",
 
     subtitle: project?.subtitle || "",
@@ -26,407 +28,323 @@ const [formData, setFormData] = useState({
 
     category: project?.category || "Portfolio",
 
-    image: project?.image || "",
+    image: null,
 
-    github: project?.github || "",
+    github: project?.links?.github || "",
 
-    liveDemo: project?.liveDemo || "",
+    liveDemo: project?.links?.live || "",
 
     technologies: project?.technologies?.join(", ") || "",
 
     status: project?.status || "Completed",
 
     featured: project?.featured || false,
+  });
 
-});
-
-   function handleChange(e) {
-
+  function handleChange(e) {
     const { name, value, type, checked } = e.target;
 
     setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }
 
-        ...prev,
+  function processImage(file) {
+    if (!file) return;
 
-        [name]:
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image.");
+      return;
+    }
 
-            type === "checkbox"
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be less than 5MB.");
+      return;
+    }
 
-                ? checked
+    setRemoveCurrentImage(false);
 
-                : value,
-
+    setFormData((prev) => ({
+      ...prev,
+      image: file,
     }));
 
-}
+    setPreview(URL.createObjectURL(file));
+  }
 
-function validate() {
+  function removeImage() {
+    setPreview("");
 
+    setFormData((prev) => ({
+      ...prev,
+      image: null,
+    }));
+
+    setRemoveCurrentImage(true);
+  }
+
+  function validate() {
     if (!formData.title.trim()) {
-
-        toast.error("Project title is required.");
-
-        return false;
-
+      toast.error("Project title is required.");
+      return false;
     }
 
     if (!formData.description.trim()) {
-
-        toast.error("Project description is required.");
-
-        return false;
-
+      toast.error("Project description is required.");
+      return false;
     }
 
     return true;
+  }
 
-}
-
-    async function handleSubmit(e) {
-
+  async function handleSubmit(e) {
     e.preventDefault();
+
+    if (loading) return;
 
     if (!validate()) return;
 
     try {
+      setLoading(true);
 
-        setLoading(true);
+      const payload = new FormData();
 
-        const payload = {
+      payload.append("title", formData.title);
 
-            ...formData,
+      payload.append("subtitle", formData.subtitle);
 
-            technologies:
+      payload.append("description", formData.description);
 
-                formData.technologies
+      payload.append("category", formData.category);
 
-                    .split(",")
+      payload.append("status", formData.status);
 
-                    .map((tech) => tech.trim())
+      payload.append("featured", formData.featured);
 
-                    .filter(Boolean),
+      payload.append("removeImage", removeCurrentImage);
 
-        };
+      payload.append(
+        "technologies",
+        JSON.stringify(
+          formData.technologies
+            .split(",")
+            .map((tech) => tech.trim())
+            .filter(Boolean),
+        ),
+      );
 
-        if (project) {
+      payload.append("links[github]", formData.github);
 
-            await updateProject(
+      payload.append("links[live]", formData.liveDemo);
 
-                project._id,
+      if (formData.image instanceof File) {
+        payload.append("image", formData.image);
+      }
 
-                payload
+      if (project) {
+        await updateProject(project._id, payload);
 
-            );
+        toast.success("Project updated successfully.");
+      } else {
+        await createProject(payload);
 
-            toast.success(
+        toast.success("Project created successfully.");
+      }
 
-                "Project updated successfully."
+      await refresh();
 
-            );
-
-        }
-
-        else {
-
-            await createProject(
-
-                payload
-
-            );
-
-            toast.success(
-
-                "Project created successfully."
-
-            );
-
-        }
-
-        await refresh();
-
-        close();
-
+      close();
+    } catch (err) {
+      toast.error(err.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
+  }
 
-    catch (err) {
+  return (
+    <form onSubmit={handleSubmit} className="relative space-y-8">
+      {loading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center rounded-3xl bg-black/60 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4">
+            <LoaderCircle size={42} className="animate-spin text-indigo-400" />
 
-        toast.error(err.message || "Something went wrong.");
+            <p className="text-white/80">Saving project...</p>
+          </div>
+        </div>
+      )}
 
-    }
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-white/10 pb-3">
+          <FolderOpen size={20} className="text-indigo-400" />
 
-    finally {
+          <h3 className="text-lg font-semibold">Basic Information</h3>
+        </div>
 
-        setLoading(false);
+        <Input
+          label="Project Title"
+          required
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="FuturOS Portfolio"
+          disabled={loading}
+        />
 
-    }
-
-}
-
-   return (
-
-    <form
-        onSubmit={handleSubmit}
-        className="space-y-6"
-    >
-
-        {/* Title */}
+        <Input
+          label="Subtitle"
+          name="subtitle"
+          value={formData.subtitle}
+          onChange={handleChange}
+          placeholder="Modern Desktop Portfolio"
+          disabled={loading}
+        />
 
         <div>
+          <label className="mb-2 block text-sm font-medium">Description</label>
 
-            <label className="mb-2 block text-sm font-medium">
-                Project Title
-            </label>
+          <RichTextEditor
+            value={formData.description}
+            onChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                description: value,
+              }))
+            }
+          />
+        </div>
+      </div>
 
-            <input
-                disabled={loading}
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="FuturOS Portfolio"
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 outline-none focus:border-indigo-500"
-            />
+      {/* <Select
+        label="Category"
+        name="category"
+        value={formData.category}
+        onChange={handleChange}
+        disabled={loading}
+      >
+        <option>Portfolio</option>
+        <option>Web App</option>
+        <option>Desktop App</option>
+        <option>Mobile App</option>
+        <option>API</option>
+        <option>AI</option>
+        <option>Other</option>
+      </Select> */}
 
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-white/10 pb-3">
+          <Image size={20} className="text-indigo-400" />
+
+          <h3 className="text-lg font-semibold">Project Media</h3>
         </div>
 
-        {/* Subtitle */}
+        <FileUpload
+          label="Project Image"
+          value={preview}
+          loading={loading}
+          onChange={processImage}
+          onRemove={removeImage}
+        />
+      </div>
 
-        <div>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-white/10 pb-3">
+          <Link2 size={20} className="text-indigo-400" />
 
-            <label className="mb-2 block text-sm font-medium">
-                Subtitle
-            </label>
-
-            <input
-                disabled={loading}
-                type="text"
-                name="subtitle"
-                value={formData.subtitle}
-                onChange={handleChange}
-                placeholder="Modern Desktop Portfolio"
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 outline-none focus:border-indigo-500"
-            />
-
+          <h3 className="text-lg font-semibold">Links & Technologies</h3>
         </div>
 
-        {/* Description */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <Input
+            label="GitHub URL"
+            name="github"
+            value={formData.github}
+            onChange={handleChange}
+            placeholder="https://github.com/..."
+            disabled={loading}
+          />
 
-        <div>
-
-            <label className="mb-2 block text-sm font-medium">
-                Description
-            </label>
-
-            <textarea
-                disabled={loading}
-                rows={5}
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Write something about the project..."
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 outline-none focus:border-indigo-500"
-            />
-
+          <Input
+            label="Live Demo"
+            name="liveDemo"
+            value={formData.liveDemo}
+            onChange={handleChange}
+            placeholder="https://..."
+            disabled={loading}
+          />
         </div>
 
-        {/* Category */}
+        <Input
+          label="Technologies"
+          helperText="Separate with commas."
+          name="technologies"
+          value={formData.technologies}
+          onChange={handleChange}
+          placeholder="React, Node.js, MongoDB"
+          disabled={loading}
+        />
+      </div>
 
-        <div>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-white/10 pb-3">
+          <Settings size={20} className="text-indigo-400" />
 
-            <label className="mb-2 block text-sm font-medium">
-                Category
-            </label>
-
-            <select
-                disabled={loading}
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3"
-            >
-
-                <option>Portfolio</option>
-
-                <option>Web App</option>
-
-                <option>Desktop App</option>
-
-                <option>Mobile App</option>
-
-                <option>API</option>
-
-                <option>AI</option>
-
-                <option>Other</option>
-
-            </select>
-
+          <h3 className="text-lg font-semibold">Project Settings</h3>
         </div>
 
-        {/* Image */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <Select
+            label="Category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            disabled={loading}
+          >
+            <option>Portfolio</option>
+            <option>Web App</option>
+            <option>Desktop App</option>
+            <option>Mobile App</option>
+            <option>API</option>
+            <option>AI</option>
+            <option>Other</option>
+          </Select>
 
-        <div>
-
-            <label className="mb-2 block text-sm font-medium">
-                Image URL
-            </label>
-
-            <input
-                disabled={loading}
-                type="text"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="https://..."
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 outline-none"
-            />
-
+          <Select
+            label="Status"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            disabled={loading}
+          >
+            <option>Completed</option>
+            <option>In Progress</option>
+            <option>Archived</option>
+          </Select>
         </div>
 
-        {/* Github */}
+        <Checkbox
+          label="Featured Project"
+          helperText="Featured projects appear first on your portfolio."
+          name="featured"
+          checked={formData.featured}
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </div>
 
-        <div>
+      <div className="flex justify-end gap-4 pt-4">
+        <Button variant="secondary" onClick={close} disabled={loading}>
+          Cancel
+        </Button>
 
-            <label className="mb-2 block text-sm font-medium">
-                Github URL
-            </label>
-
-            <input
-                disabled={loading}
-                type="text"
-                name="github"
-                value={formData.github}
-                onChange={handleChange}
-                placeholder="https://github.com/..."
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 outline-none"
-            />
-
-        </div>
-
-        {/* Live Demo */}
-
-        <div>
-
-            <label className="mb-2 block text-sm font-medium">
-                Live Demo
-            </label>
-
-            <input
-                disabled={loading}
-                type="text"
-                name="liveDemo"
-                value={formData.liveDemo}
-                onChange={handleChange}
-                placeholder="https://..."
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 outline-none"
-            />
-
-        </div>
-
-        {/* Technologies */}
-
-        <div>
-
-            <label className="mb-2 block text-sm font-medium">
-                Technologies
-            </label>
-
-            <input
-                disabled={loading}
-                type="text"
-                name="technologies"
-                value={formData.technologies}
-                onChange={handleChange}
-                placeholder="React, Node, MongoDB"
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 outline-none"
-            />
-
-            <p className="mt-2 text-xs text-white/50">
-
-                Separate technologies with commas.
-
-            </p>
-
-        </div>
-
-        {/* Status */}
-
-        <div>
-
-            <label className="mb-2 block text-sm font-medium">
-                Status
-            </label>
-
-            <select
-                disabled={loading}
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3"
-            >
-
-                <option>Completed</option>
-
-                <option>In Progress</option>
-
-                <option>Archived</option>
-
-            </select>
-
-        </div>
-
-        {/* Featured */}
-
-        <div className="flex items-center gap-3">
-
-            <input
-                disabled={loading}
-                type="checkbox"
-                name="featured"
-                checked={formData.featured}
-                onChange={handleChange}
-            />
-
-            <label>
-
-                Featured Project
-
-            </label>
-
-        </div>
-
-        {/* Buttons */}
-
-        <div className="flex justify-end gap-4 pt-4">
-
-            <button
-                type="button"
-                onClick={close}
-                disabled={loading}
-                className="rounded-xl border border-white/10 px-6 py-3"
-            >
-
-                Cancel
-
-            </button>
-
-            <button
-                type="submit"
-                disabled={loading}
-                className="rounded-xl bg-indigo-600 px-6 py-3 font-semibold transition hover:bg-indigo-700 disabled:opacity-50"
-            >
-
-                {loading
-                    ? "Saving..."
-                    : project
-                    ? "Update Project"
-                    : "Create Project"}
-
-            </button>
-
-        </div>
-
+        <Button
+          type="submit"
+          loading={loading}
+          loadingText={project ? "Updating..." : "Creating..."}
+        >
+          {project ? "Update Project" : "Create Project"}
+        </Button>
+      </div>
     </form>
-
-);
+  );
 }

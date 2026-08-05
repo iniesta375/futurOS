@@ -40,24 +40,23 @@ export async function getProject(id) {
 // ============================
 
 export async function createProject(project) {
-  const token = getToken();
+    const token = getToken();
 
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(project),
-  });
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: project,
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to create project");
-  }
+    if (!response.ok) {
+        throw new Error(data.message || "Failed to create project");
+    }
 
-  return data;
+    return data;
 }
 
 // ============================
@@ -65,24 +64,23 @@ export async function createProject(project) {
 // ============================
 
 export async function updateProject(id, project) {
-  const token = getToken();
+    const token = getToken();
 
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(project),
-  });
+    const response = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: project,
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to update project");
-  }
+    if (!response.ok) {
+        throw new Error(data.message || "Failed to update project");
+    }
 
-  return data;
+    return data;
 }
 
 // ============================
