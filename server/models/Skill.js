@@ -37,6 +37,11 @@ const skillSchema = new mongoose.Schema(
       default: false,
     },
 
+    archived: {
+      type: Boolean,
+      default: false,
+    },
+
     icon: {
       type: String,
       default: "",
@@ -45,11 +50,12 @@ const skillSchema = new mongoose.Schema(
     iconPublicId: {
       type: String,
       default: "",
+      select: false,
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Skill", skillSchema);

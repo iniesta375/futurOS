@@ -1,22 +1,17 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  Children,
-} from "react";
+import { useState, useRef, useEffect, Children } from "react";
+
+import { createPortal } from "react-dom";
 
 import { motion, AnimatePresence } from "framer-motion";
 
-import {
-  ChevronDown,
-  Check,
-} from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 
 export default function Select({
   label,
   value,
   onChange,
   children,
+  options: propOptions = [],
   placeholder = "Select...",
   helperText,
   error,
@@ -32,69 +27,94 @@ export default function Select({
 
   const [open, setOpen] = useState(false);
 
-  const [highlighted, setHighlighted] =
-    useState(-1);
+  const [position, setPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
 
-  const options = Children.toArray(children)
-    .filter(
-      (child) =>
-        child &&
-        child.type === "option",
-    )
+  const [highlighted, setHighlighted] = useState(-1);
+
+  const childOptions = Children.toArray(children)
+    .filter((child) => child && child.type === "option")
     .map((child) => ({
       value: child.props.value,
       label: child.props.children,
-      disabled:
-        child.props.disabled || false,
+      disabled: child.props.disabled || false,
     }));
 
-  const selected =
-    options.find(
-      (option) =>
-        option.value === value,
-    ) || null;
+  const options = propOptions.length > 0 ? propOptions : childOptions;
+
+  const selected = options.find((option) => option.value === value) || null;
 
   useEffect(() => {
     function outside(event) {
       if (
         containerRef.current &&
-        !containerRef.current.contains(
-          event.target,
-        )
+        !containerRef.current.contains(event.target)
       ) {
         setOpen(false);
       }
     }
 
-    document.addEventListener(
-      "mousedown",
-      outside,
-    );
+    document.addEventListener("mousedown", outside);
 
-    return () =>
-      document.removeEventListener(
-        "mousedown",
-        outside,
-      );
+    return () => document.removeEventListener("mousedown", outside);
   }, []);
 
   useEffect(() => {
     if (!open) return;
 
-    const index = options.findIndex(
-      (option) =>
-        option.value === value,
-    );
+    updatePosition();
+
+    const index = options.findIndex((option) => option.value === value);
 
     setHighlighted(index);
-  }, [open]);
+  }, [open, value]);
+
+  useEffect(() => {
+  if (!open) return;
+
+  function handleUpdate() {
+    updatePosition();
+  }
+
+  window.addEventListener("resize", handleUpdate);
+
+  window.addEventListener(
+    "scroll",
+    handleUpdate,
+    true
+  );
+
+  return () => {
+    window.removeEventListener(
+      "resize",
+      handleUpdate
+    );
+
+    window.removeEventListener(
+      "scroll",
+      handleUpdate,
+      true
+    );
+  };
+}, [open]);
+
+  function updatePosition() {
+    if (!buttonRef.current) return;
+
+    const rect = buttonRef.current.getBoundingClientRect();
+
+    setPosition({
+      top: rect.bottom + 8,
+      left: rect.left,
+      width: rect.width,
+    });
+  }
 
   function selectOption(option) {
-    if (
-      option.disabled ||
-      disabled
-    )
-      return;
+    if (option.disabled || disabled) return;
 
     onChange?.({
       target: {
@@ -123,14 +143,8 @@ export default function Select({
           return;
         }
 
-        if (
-          highlighted >= 0
-        ) {
-          selectOption(
-            options[
-              highlighted
-            ],
-          );
+        if (highlighted >= 0) {
+          selectOption(options[highlighted]);
         }
 
         break;
@@ -149,13 +163,7 @@ export default function Select({
           return;
         }
 
-        setHighlighted(
-          (prev) =>
-            Math.min(
-              prev + 1,
-              options.length - 1,
-            ),
-        );
+        setHighlighted((prev) => Math.min(prev + 1, options.length - 1));
 
         break;
 
@@ -168,13 +176,7 @@ export default function Select({
           return;
         }
 
-        setHighlighted(
-          (prev) =>
-            Math.max(
-              prev - 1,
-              0,
-            ),
-        );
+        setHighlighted((prev) => Math.max(prev - 1, 0));
 
         break;
 
@@ -184,24 +186,18 @@ export default function Select({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className={`space-y-2 ${containerClassName}`}
-    >
+    <>
+    <div ref={containerRef} className={`space-y-2 ${containerClassName}`}>
       {label && (
         <label className="text-sm font-medium">
           {label}
 
-          {required && (
-            <span className="ml-1 text-rose-400">
-              *
-            </span>
-          )}
+          {required && <span className="ml-1 text-rose-400">*</span>}
         </label>
       )}
 
       <div className="relative">
-                <button
+        <button
           ref={buttonRef}
           type="button"
           disabled={disabled}
@@ -228,13 +224,7 @@ export default function Select({
             ${className}
           `}
         >
-          <span
-            className={
-              selected
-                ? "text-white"
-                : "text-white/45"
-            }
-          >
+          <span className={selected ? "text-white" : "text-white/45"}>
             {selected?.label || placeholder}
           </span>
 
@@ -250,139 +240,125 @@ export default function Select({
           </motion.div>
         </button>
 
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: -8,
-                scale: 0.98,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: 1,
-              }}
-              exit={{
-                opacity: 0,
-                y: -8,
-                scale: 0.98,
-              }}
-              transition={{
-                duration: 0.18,
-              }}
-              className="
-                absolute
-                z-999
-                mt-2
-                max-h-72
-                w-full
-                overflow-y-auto
-                rounded-2xl
-                border
-                border-white/10
-                bg-[#13151F]
-                shadow-2xl
-              "
-            >
-              {options.map(
-                (
-                  option,
-                  index,
-                ) => {
-                  const active =
-                    option.value ===
-                    value;
+       
 
-                  const highlightedOption =
-                    highlighted ===
-                    index;
-
-                  return (
-                    <button
-                      key={
-                        option.value
-                      }
-                      type="button"
-                      disabled={
-                        option.disabled
-                      }
-                      onMouseEnter={() =>
-                        setHighlighted(
-                          index,
-                        )
-                      }
-                      onClick={() =>
-                        selectOption(
-                          option,
-                        )
-                      }
-                      className={`
-                        flex
-                        w-full
-                        items-center
-                        justify-between
-                        px-4
-                        py-3
-                        text-left
-                        transition-all
-
-                        ${
-                          active
-                            ? "bg-indigo-600 text-white"
-                            : highlightedOption
-                              ? "bg-white/10"
-                              : "hover:bg-white/5"
-                        }
-
-                        ${
-                          option.disabled
-                            ? "cursor-not-allowed opacity-40"
-                            : ""
-                        }
-                      `}
-                    >
-                      <span>
-                        {
-                          option.label
-                        }
-                      </span>
-
-                      {active && (
-                        <Check
-                          size={
-                            16
-                          }
-                        />
-                      )}
-                    </button>
-                  );
-                },
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Hidden native select */}
-        <select
-          hidden
-          value={value}
-          onChange={onChange}
-          name={name}
-        >
-          {children}
+        <select hidden value={value} onChange={onChange} name={name}>
+          {propOptions.length > 0
+            ? propOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))
+            : children}
         </select>
       </div>
 
       {error ? (
-        <p className="text-sm text-rose-400">
-          {error}
-        </p>
+        <p className="text-sm text-rose-400">{error}</p>
       ) : helperText ? (
-        <p className="text-xs text-white/45">
-          {helperText}
-        </p>
+        <p className="text-xs text-white/45">{helperText}</p>
       ) : null}
     </div>
-  );
+
+{createPortal(
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: -8,
+              scale: 0.98,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            }}
+            exit={{
+              opacity: 0,
+              y: -8,
+              scale: 0.98,
+            }}
+            transition={{
+              duration: 0.18,
+            }}
+            style={{
+              position: "fixed",
+              top: position.top,
+              left: position.left,
+              width: position.width,
+            }}
+            className="
+              z-[999999]
+              max-h-72
+              overflow-y-auto
+              rounded-2xl
+              border
+              border-white/10
+              bg-[#13151F]
+              shadow-2xl
+            "
+          >
+            {options.map((option, index) => {
+              const active =
+                option.value === value;
+
+              const highlightedOption =
+                highlighted === index;
+
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  disabled={option.disabled}
+                  onMouseEnter={() =>
+                    setHighlighted(index)
+                  }
+                  onClick={() =>
+                    selectOption(option)
+                  }
+                  className={`
+                    flex
+                    w-full
+                    items-center
+                    justify-between
+                    px-4
+                    py-3
+                    text-left
+                    transition-all
+
+                    ${
+                      active
+                        ? "bg-indigo-600 text-white"
+                        : highlightedOption
+                          ? "bg-white/10"
+                          : "hover:bg-white/5"
+                    }
+
+                    ${
+                      option.disabled
+                        ? "cursor-not-allowed opacity-40"
+                        : ""
+                    }
+                  `}
+                >
+                  <span>
+                    {option.label}
+                  </span>
+
+                  {active && (
+                    <Check size={16} />
+                  )}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>,
+      document.body
+    )}
+  </>
+);
+
+
 }

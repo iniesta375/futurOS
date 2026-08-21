@@ -1,11 +1,8 @@
 const express = require("express");
-console.log("PROJECT ROUTES FILE LOADED");
+
 const router = express.Router();
 
 const upload = require("../middleware/upload");
-
-
-
 const protect = require("../middleware/authMiddleware");
 
 const {
@@ -14,15 +11,20 @@ const {
   createProject,
   updateProject,
   deleteProject,
+  bulkProjectAction,
 } = require("../controllers/projectController");
 
+// Public Routes
 router.get("/", getProjects);
 router.get("/:id", getProject);
 
-router.post("/", protect,  upload.single("image"), createProject);
+// Protected Routes
+router.post("/", protect, upload.single("image"), createProject);
+
+router.post("/bulk-action", protect, bulkProjectAction);
+
 router.put("/:id", protect, upload.single("image"), updateProject);
+
 router.delete("/:id", protect, deleteProject);
-
-
 
 module.exports = router;

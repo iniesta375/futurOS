@@ -105,3 +105,31 @@ export async function deleteProject(id) {
 
   return data;
 }
+
+// ============================
+// BULK PROJECT ACTION
+// ============================
+
+export async function bulkProjectAction(ids, action) {
+  const token = getToken();
+
+  const response = await fetch(`${API_URL}/bulk-action`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      ids,
+      action,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Bulk action failed");
+  }
+
+  return data;
+}

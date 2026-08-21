@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { getProjects, deleteProject } from "../../../services/projectService";
+import {
+  getProjects,
+  deleteProject,
+  bulkProjectAction,
+} from "../../../services/projectService";
 
 import {
   Button,
@@ -15,6 +19,7 @@ import {
 
 import ProjectTable from "../projects/components/ProjectTable";
 import ProjectModal from "../projects/components/ProjectModal";
+import BulkActionBar from "../projects/components/BulkActionBar";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -38,6 +43,9 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
 
   const [selectedProjects, setSelectedProjects] = useState([]);
+
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const [sortBy, setSortBy] = useState("newest");
 
@@ -102,6 +110,30 @@ export default function Projects() {
     }
   }
 
+  async function handleBulkAction(action) {
+    if (selectedProjects.length === 0) {
+      toast.warning("Select at least one project.");
+      return;
+    }
+
+    if (action === "delete") {
+      setConfirmOpen(true);
+      return;
+    }
+
+    try {
+      const result = await bulkProjectAction(selectedProjects, action);
+
+      toast.success(result.message);
+
+      setSelectedProjects([]);
+
+      await fetchProjects();
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
+
   function toggleProjectSelection(id) {
     setSelectedProjects((prev) =>
       prev.includes(id)
@@ -119,6 +151,38 @@ export default function Projects() {
       setSelectedProjects((prev) => prev.filter((id) => !pageIds.includes(id)));
     } else {
       setSelectedProjects((prev) => [...new Set([...prev, ...pageIds])]);
+    }
+  }
+
+  function clearSelection() {
+    setSelectedProjects([]);
+  }
+
+  function featureSelected() {
+    handleBulkAction("feature");
+  }
+
+  function unfeatureSelected() {
+    handleBulkAction("unfeature");
+  }
+
+  function archiveSelected() {
+    handleBulkAction("archive");
+  }
+
+  function deleteSelected() {
+    setBulkDeleteOpen(true);
+  }
+
+  async function confirmBulkDelete() {
+    try {
+      setBulkDeleting(true);
+
+      await handleBulkAction("delete");
+
+      setBulkDeleteOpen(false);
+    } finally {
+      setBulkDeleting(false);
     }
   }
 
@@ -189,6 +253,17 @@ export default function Projects() {
         subtitle="Manage your portfolio projects, featured work and case studies."
         actions={<Button onClick={openCreate}> New Project</Button>}
       />
+
+      <BulkActionBar
+        selectedCount={selectedProjects.length}
+        // onAction={handleBulkAction}
+        onFeature={featureSelected}
+        onUnfeature={unfeatureSelected}
+        onArchive={archiveSelected}
+        onDelete={deleteSelected}
+        onClear={clearSelection}
+      />
+
       <GlassCard className="relative z-50 overflow-visible">
         <div className="flex flex-wrap items-end gap-4 space-y-4">
           <div className="flex-1 min-w-70">
@@ -294,6 +369,18 @@ export default function Projects() {
           setProjectToDelete(null);
         }}
         onConfirm={confirmDelete}
+      />
+
+      <ConfirmDialog
+        open={bulkDeleteOpen}
+        title={`Delete ${selectedProjects.length} Project${
+          selectedProjects.length > 1 ? "s" : ""
+        }?`}
+        message="This action cannot be undone."
+        confirmText="Delete"
+        loading={bulkDeleting}
+        onCancel={() => setBulkDeleteOpen(false)}
+        onConfirm={confirmBulkDelete}
       />
     </div>
   );

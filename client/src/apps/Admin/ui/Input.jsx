@@ -16,6 +16,7 @@ const Input = forwardRef(function Input(
     error,
     icon,
     rightIcon,
+    leftIcon,
     loading = false,
     required = false,
     className = "",
@@ -35,23 +36,17 @@ const Input = forwardRef(function Input(
 
   const isPassword = type === "password";
 
-  const inputType =
-    isPassword && showPassword ? "text" : type;
+  const inputType = isPassword && showPassword ? "text" : type;
 
   const hasError = Boolean(error);
 
   return (
     <div className={`space-y-2 ${containerClassName}`}>
       {label && (
-        <label
-          htmlFor={inputId}
-          className="block text-sm font-medium"
-        >
+        <label htmlFor={inputId} className="block text-sm font-medium">
           {label}
 
-          {required && (
-            <span className="ml-1 text-rose-400">*</span>
-          )}
+          {required && <span className="ml-1 text-rose-400">*</span>}
         </label>
       )}
 
@@ -67,18 +62,12 @@ const Input = forwardRef(function Input(
           transition-all
           duration-300
           ${hasError ? variants.error : variants.default}
-          ${
-            disabled
-              ? "cursor-not-allowed opacity-60"
-              : ""
-          }
+          ${disabled ? "cursor-not-allowed opacity-60" : ""}
           ${className}
         `}
       >
-        {icon && (
-          <div className="text-white/45">
-            {icon}
-          </div>
+        {(leftIcon || icon) && (
+          <div className="text-white/45">{leftIcon || icon}</div>
         )}
 
         <input
@@ -97,10 +86,7 @@ const Input = forwardRef(function Input(
         />
 
         {loading && (
-          <Loader2
-            size={18}
-            className="animate-spin text-indigo-400"
-          />
+          <Loader2 size={18} className="animate-spin text-indigo-400" />
         )}
 
         {!loading && rightIcon}
@@ -108,32 +94,22 @@ const Input = forwardRef(function Input(
         {!loading && isPassword && (
           <button
             type="button"
-            onClick={() =>
-              setShowPassword((prev) => !prev)
-            }
+            onClick={() => setShowPassword((prev) => !prev)}
             className="
               text-white/45
               transition
               hover:text-white
             "
           >
-            {showPassword ? (
-              <EyeOff size={18} />
-            ) : (
-              <Eye size={18} />
-            )}
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         )}
       </div>
 
       {error ? (
-        <p className="text-sm text-rose-400">
-          {error}
-        </p>
+        <p className="text-sm text-rose-400">{error}</p>
       ) : helperText ? (
-        <p className="text-xs text-white/45">
-          {helperText}
-        </p>
+        <p className="text-xs text-white/45">{helperText}</p>
       ) : null}
     </div>
   );

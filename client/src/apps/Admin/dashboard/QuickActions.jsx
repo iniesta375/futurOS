@@ -17,11 +17,10 @@ const actions = [
   },
   {
     title: "New Skill",
-    description: "Coming Soon",
+    description: "Add a new skill",
     icon: Brain,
     key: "skill",
     color: "text-purple-400",
-    disabled: true,
   },
   {
     title: "Upload Resume",
@@ -33,7 +32,10 @@ const actions = [
   },
 ];
 
-export default function QuickActions({ onNewProject }) {
+export default function QuickActions({
+  onNewProject,
+  onNewSkill,
+}) {
   return (
     <GlassCard className="h-full">
       <div className="mb-8 flex items-center justify-between">
@@ -60,8 +62,12 @@ export default function QuickActions({ onNewProject }) {
                 if (action.key === "project") {
                   onNewProject();
                 }
+
+                if (action.key === "skill") {
+                  onNewSkill();
+                }
               }}
-              className={`
+              className="
                 group
                 rounded-2xl
                 border
@@ -71,12 +77,12 @@ export default function QuickActions({ onNewProject }) {
                 text-left
                 transition-all
                 duration-300
+                hover:-translate-y-1
                 hover:border-indigo-500/40
                 hover:bg-white/10
-                hover:-translate-y-1
                 disabled:cursor-not-allowed
                 disabled:opacity-60
-              `}
+              "
             >
               <div
                 className={`
@@ -102,9 +108,20 @@ export default function QuickActions({ onNewProject }) {
                 {action.description}
               </p>
 
-              <div className="mt-6 flex items-center gap-2 text-sm text-indigo-400 opacity-0 transition group-hover:opacity-100">
+              <div
+                className="
+                  mt-6
+                  flex
+                  items-center
+                  gap-2
+                  text-sm
+                  text-indigo-400
+                  opacity-0
+                  transition
+                  group-hover:opacity-100
+                "
+              >
                 <span>Open</span>
-
                 <ArrowRight size={16} />
               </div>
             </button>

@@ -4,6 +4,7 @@ import {
   Brain,
   Newspaper,
   BarChart3,
+  FolderArchive,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -43,6 +44,12 @@ const menu = [
         icon: Brain,
 
         label: "Skills",
+      },
+
+      {
+        key: "archivedSkills",
+        icon: FolderArchive,
+        label: "Archived Skills",
       },
 
       {

@@ -15,7 +15,7 @@ export default function ProjectBasicInfo({
         rounded-3xl
         border
         border-white/10
-        bg-white/[0.03]
+        bg-white/3
         p-6
         backdrop-blur-xl
       "

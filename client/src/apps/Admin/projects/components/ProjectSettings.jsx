@@ -18,47 +18,53 @@ const statusOptions = [
   { label: "Archived", value: "Archived" },
 ];
 
-export default function ProjectSettings({
-  formData,
-  setFormData,
-  loading,
-}) {
+export default function ProjectSettings({ formData, setFormData, loading }) {
   return (
     <section className="space-y-6">
       <div className="flex items-center gap-3 border-b border-white/10 pb-3">
         <Settings size={20} className="text-indigo-400" />
 
-        <h3 className="text-lg font-semibold">
-          Project Settings
-        </h3>
+        <h3 className="text-lg font-semibold">Project Settings</h3>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Select
           label="Category"
+          name="category"
           value={formData.category}
-          options={categoryOptions}
-          disabled={loading}
-          onChange={(value) =>
+          onChange={(e) =>
             setFormData((prev) => ({
               ...prev,
-              category: value,
+              category: e.target.value,
             }))
           }
-        />
+          disabled={loading}
+        >
+          <option value="Portfolio">Portfolio</option>
+          <option value="Web App">Web App</option>
+          <option value="Desktop App">Desktop App</option>
+          <option value="Mobile App">Mobile App</option>
+          <option value="API">API</option>
+          <option value="AI">AI</option>
+          <option value="Other">Other</option>
+        </Select>
 
         <Select
           label="Status"
+          name="status"
           value={formData.status}
-          options={statusOptions}
-          disabled={loading}
-          onChange={(value) =>
+          onChange={(e) =>
             setFormData((prev) => ({
               ...prev,
-              status: value,
+              status: e.target.value,
             }))
           }
-        />
+          disabled={loading}
+        >
+          <option value="Completed">Completed</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Archived">Archived</option>
+        </Select>
       </div>
 
       <Checkbox

@@ -1,14 +1,37 @@
 const API_URL =
-  import.meta.env.VITE_API_URL?.replace("/projects", "/dashboard") ||
+  import.meta.env.VITE_API_URL?.replace(
+    "/projects",
+    "/dashboard"
+  ) ||
   "http://localhost:5000/api/dashboard";
 
 export async function getDashboardStats() {
-  const response = await fetch(`${API_URL}/stats`);
+  const response = await fetch(
+    `${API_URL}/stats`
+  );
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message);
+    throw new Error(
+      data.message || "Unable to load dashboard statistics."
+    );
+  }
+
+  return data;
+}
+
+export async function getRecentActivity() {
+  const response = await fetch(
+    `${API_URL}/activity`
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || "Unable to load recent activity."
+    );
   }
 
   return data;
