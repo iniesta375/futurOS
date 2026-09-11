@@ -6,7 +6,8 @@ import Sidebar from "./layout/Sidebar";
 import Dashboard from "./dashboard/Dashboard";
 import Projects from "./pages/Project";
 import Skills from "./pages/Skills";
-import ArchivedSkills from "./pages/ArchivedSkills"
+import ArchivedSkills from "./pages/ArchivedSkills";
+import Experience from "./pages/Experience";
 
 import { isLoggedIn } from "../../services/authService";
 
@@ -29,7 +30,7 @@ export default function Admin() {
         {page === "projects" && <Projects />}
         {page === "skills" && <Skills />}
         {page === "archivedSkills" && <ArchivedSkills />}
-        
+        {page === "experience" && <Experience />}
       </main>
     </div>
   );

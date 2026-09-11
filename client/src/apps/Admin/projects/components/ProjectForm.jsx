@@ -125,6 +125,7 @@ export default function ProjectForm({
       payload.append("category", formData.category);
       payload.append("status", formData.status);
       payload.append("featured", formData.featured);
+
       payload.append(
         "removeImage",
         removeCurrentImage
@@ -188,82 +189,90 @@ export default function ProjectForm({
   }
 
   return (
-  <form
-    onSubmit={handleSubmit}
-    className="relative"
-  >
-    {loading && (
-      <div className="absolute inset-0 z-50 flex items-center justify-center rounded-3xl bg-black/60 backdrop-blur-sm">
-        <div className="flex flex-col items-center gap-4">
-          <LoaderCircle
-            size={42}
-            className="animate-spin text-indigo-400"
+    <form
+      onSubmit={handleSubmit}
+      className="relative"
+    >
+      {loading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center rounded-3xl bg-black/60 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4">
+            <LoaderCircle
+              size={42}
+              className="animate-spin text-indigo-400"
+            />
+
+            <p className="text-white/80">
+              Saving project...
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="grid gap-8 xl:grid-cols-[2fr_1fr]">
+
+        {/* Left Column */}
+        <div className="space-y-8">
+
+          <ProjectBasicInfo
+            formData={formData}
+            setFormData={setFormData}
+            handleChange={handleChange}
+            loading={loading}
           />
 
-          <p className="text-white/80">
-            Saving project...
-          </p>
+          <ProjectLinks
+            formData={formData}
+            handleChange={handleChange}
+            loading={loading}
+          />
+
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-8">
+
+          <ProjectMedia
+            preview={preview}
+            loading={loading}
+            processImage={processImage}
+            removeImage={removeImage}
+          />
+
+          <ProjectSettings
+            formData={formData}
+            setFormData={setFormData}
+            loading={loading}
+          />
+
         </div>
       </div>
-    )}
 
-    <div className="grid gap-8 xl:grid-cols-[2fr_1fr]">
-      {/* Left Column */}
-      <div className="space-y-8">
-        <ProjectBasicInfo
-          formData={formData}
-          setFormData={setFormData}
-          loading={loading}
-        />
+      <div className="mt-10 flex justify-end gap-4 border-t border-white/10 pt-6">
 
-        <ProjectLinks
-          formData={formData}
-          setFormData={setFormData}
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={close}
+          disabled={loading}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          type="submit"
           loading={loading}
-        />
+          loadingText={
+            project
+              ? "Updating..."
+              : "Creating..."
+          }
+        >
+          {project
+            ? "Update Project"
+            : "Create Project"}
+        </Button>
+
       </div>
-
-      {/* Right Column */}
-      <div className="space-y-8">
-        <ProjectMedia
-          preview={preview}
-          loading={loading}
-          processImage={processImage}
-          removeImage={removeImage}
-        />
-
-        <ProjectSettings
-          formData={formData}
-          setFormData={setFormData}
-          loading={loading}
-        />
-      </div>
-    </div>
-
-    <div className="mt-10 flex justify-end gap-4 border-t border-white/10 pt-6">
-      <Button
-        type="button"
-        variant="secondary"
-        onClick={close}
-        disabled={loading}
-      >
-        Cancel
-      </Button>
-
-      <Button
-        type="submit"
-        loading={loading}
-        loadingText={
-          project
-            ? "Updating..."
-            : "Creating..."
-        }
-      >
-        {project
-          ? "Update Project"
-          : "Create Project"}
-      </Button>
-    </div>
-  </form>
-);
+    </form>
+  );
 }

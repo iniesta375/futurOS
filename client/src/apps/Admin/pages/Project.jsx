@@ -88,27 +88,31 @@ export default function Projects() {
     setConfirmOpen(true);
   }
 
-  async function confirmDelete() {
-    if (!projectToDelete) return;
+  function openDelete(project) {
+  setProjectToDelete(project);
+  setConfirmOpen(true);
+}
 
-    try {
-      setDeleting(true);
+async function confirmDelete() {
+  if (!projectToDelete) return;
 
-      await deleteProject(projectToDelete._id);
+  try {
+    setDeleting(true);
 
-      toast.success("Project deleted.");
+    await deleteProject(projectToDelete._id);
 
-      setConfirmOpen(false);
+    toast.success("Project deleted.");
 
-      setProjectToDelete(null);
+    setConfirmOpen(false);
+    setProjectToDelete(null);
 
-      await fetchProjects();
-    } catch (err) {
-      toast.error(err.message);
-    } finally {
-      setDeleting(false);
-    }
+    await fetchProjects();
+  } catch (err) {
+    toast.error(err.message || "Failed to delete project.");
+  } finally {
+    setDeleting(false);
   }
+}
 
   async function handleBulkAction(action) {
     if (selectedProjects.length === 0) {
@@ -116,10 +120,10 @@ export default function Projects() {
       return;
     }
 
-    if (action === "delete") {
-      setConfirmOpen(true);
-      return;
-    }
+    // if (action === "delete") {
+    //   setConfirmOpen(true);
+    //   return;
+    // }
 
     try {
       const result = await bulkProjectAction(selectedProjects, action);
@@ -175,16 +179,29 @@ export default function Projects() {
   }
 
   async function confirmBulkDelete() {
-    try {
-      setBulkDeleting(true);
+  if (selectedProjects.length === 0) return;
 
-      await handleBulkAction("delete");
+  try {
+    setBulkDeleting(true);
 
-      setBulkDeleteOpen(false);
-    } finally {
-      setBulkDeleting(false);
-    }
+    const result = await bulkProjectAction(
+      selectedProjects,
+      "delete"
+    );
+
+    toast.success(result.message);
+
+    setSelectedProjects([]);
+
+    setBulkDeleteOpen(false);
+
+    await fetchProjects();
+  } catch (err) {
+    toast.error(err.message || "Failed to delete projects.");
+  } finally {
+    setBulkDeleting(false);
   }
+}
 
   const filteredProjects = projects.filter((project) => {
     const searchTerm = search.toLowerCase();

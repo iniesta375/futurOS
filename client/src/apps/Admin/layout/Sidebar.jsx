@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   FolderKanban,
   Brain,
+  BriefcaseBusiness,
   Newspaper,
   BarChart3,
   FolderArchive,
@@ -18,9 +19,7 @@ const menu = [
     items: [
       {
         key: "dashboard",
-
         icon: LayoutDashboard,
-
         label: "Dashboard",
       },
     ],
@@ -32,18 +31,20 @@ const menu = [
     items: [
       {
         key: "projects",
-
         icon: FolderKanban,
-
         label: "Projects",
       },
 
       {
         key: "skills",
-
         icon: Brain,
-
         label: "Skills",
+      },
+
+      {
+        key: "experience",
+        icon: BriefcaseBusiness,
+        label: "Experience",
       },
 
       {
@@ -54,9 +55,7 @@ const menu = [
 
       {
         key: "blog",
-
         icon: Newspaper,
-
         label: "Blog",
       },
     ],
@@ -68,9 +67,7 @@ const menu = [
     items: [
       {
         key: "analytics",
-
         icon: BarChart3,
-
         label: "Analytics",
       },
     ],
@@ -82,24 +79,20 @@ const menu = [
     items: [
       {
         key: "settings",
-
         icon: Settings,
-
         label: "Settings",
       },
     ],
   },
 ];
 
-export default function Sidebar({
-  page,
-
-  setPage,
-}) {
+export default function Sidebar({ page, setPage }) {
   return (
     <aside className="glass flex w-72 flex-col border-r border-white/10 p-6">
       <div>
-        <h1 className="font-display text-3xl text-gradient">FuturOS</h1>
+        <h1 className="font-display text-3xl text-gradient">
+          FuturOS
+        </h1>
 
         <p className="text-white/50">Studio</p>
       </div>
@@ -119,13 +112,11 @@ export default function Sidebar({
                   <button
                     key={item.key}
                     onClick={() => setPage(item.key)}
-                    className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 transition
-
-                                                ${
-                                                  page === item.key
-                                                    ? "bg-indigo-600 text-white"
-                                                    : "glass-hover"
-                                                }`}
+                    className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 transition ${
+                      page === item.key
+                        ? "bg-indigo-600 text-white"
+                        : "glass-hover"
+                    }`}
                   >
                     <Icon size={18} />
 
@@ -141,7 +132,6 @@ export default function Sidebar({
       <button
         onClick={() => {
           logout();
-
           window.location.reload();
         }}
         className="flex items-center gap-3 rounded-xl bg-red-500/20 px-4 py-3 text-red-300"

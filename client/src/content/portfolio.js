@@ -77,7 +77,7 @@ export const SOCIALS = [
   {
     label: 'LinkedIn',
     icon:  'linkedin',
-    url:   'https://linkedin.com/in/ajayi-inioluwa',
+    url:   'https://www.linkedin.com/in/ajayi-inioluwa-0b792a382',
     color: '#0a66c2',
   },
   {

@@ -9,6 +9,7 @@ const projectRoutes = require("./routes/projectRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const skillRoutes = require("./routes/skillRoutes");
+const experienceRoutes = require("./routes/experienceRoutes");
 
 
 connectDB();
@@ -29,6 +30,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/skills", skillRoutes);
+app.use("/api/experiences", experienceRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
